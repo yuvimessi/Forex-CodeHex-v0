@@ -1,0 +1,269 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Forex-CodeHex - Currency Converter</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <script src="scripts/jquery-3.4.1.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <link href="css/MyCustomStyle.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+    <script type="text/javascript">
+
+
+        function buttonBuffer() {
+
+            document.getElementById("conv").disabled = true;
+            setTimeout(function () { document.getElementById("conv").disabled = false; }, 60000);
+
+
+        }
+
+
+
+        function getConversion() {
+
+            var pair1 = document.getElementById('pair1').value;
+            var pair2 = document.getElementById('pair2').value;
+            var amount = document.getElementById('amount').value;
+            var access_key = 'DpCMh4J6vOutZOXFheF7pbSnESYzW34FzkwfqxlxJeTSIitm7J';
+
+            fetch("https://fcsapi.com/api-v2/forex/converter?pair1=" + pair1 + "&pair2=" + pair2 + "&amount=" + amount + "&access_key=" + access_key)
+                .then(response => response.json())
+                .then(data => {
+
+                    //to print the json value on console(to check)
+                    //console.log(data.response.total)
+
+                    document.getElementById("result-amount").innerHTML = '<br><h2 class="text-center">Converted Amount: <u>' + data.response.total + '</u></h2>';
+                })
+        }
+
+
+
+        function getPlot() {
+
+            var pair1 = document.getElementById('pair1').value;
+            var pair2 = document.getElementById('pair2').value;
+            var access_key = 'DpCMh4J6vOutZOXFheF7pbSnESYzW34FzkwfqxlxJeTSIitm7J';
+
+            var date = new Date();
+            var day = date.getDay();
+            if (day == 0)
+                date.setDate(date.getDate() - 10);
+            else if (day == 6)
+                date.setDate(date.getDate() - 9);
+            else
+                date.setDate(date.getDate() - 8);
+
+            var fromDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+
+            var date2 = new Date();
+            var day = date2.getDay();
+            if (day == 0)
+                date2.setDate(date2.getDate() - 2);
+            else if (day == 6)
+                date2.setDate(date2.getDate() - 1);
+            else
+                date2.setDate(date2.getDate());
+
+            var toDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate();
+
+
+            google.charts.load('current', { packages: ['corechart', 'line'] });
+            google.charts.setOnLoadCallback(drawLineColors);
+
+            function drawLineColors() {
+                var gdata = new google.visualization.DataTable();
+                gdata.addColumn('string', 'X');
+                gdata.addColumn('number', 'Highs');
+                gdata.addColumn('number', 'Lows');
+
+
+                var highs = [];
+                var lows = [];
+                var dates = [];
+
+
+                fetch("https://fcsapi.com/api-v2/forex/history?symbol=" + pair1 + "/" + pair2 + "&period=1d&from=" + fromDate + "T12:00&to=" + toDate + "T12:00&access_key=" + access_key)
+                    .then(response => response.json())
+                    .then(data2 => {
+
+                        //to print the json value on console(to check)
+                        //console.log(data2)
+
+                        for (i = 0; i < data2.response.length; i++) {
+
+                            highs[i] = data2.response[i].h;
+                            lows[i] = data2.response[i].l;
+
+                        }
+
+                        for (i = 0; i < data2.response.length; i++) {
+                            var day = date.getDay();
+                            const monthNames = ["January", "February", "March", "April", "May", "June",
+                                "July", "August", "September", "October", "November", "December"
+                            ];
+                            if (day == 0) {
+                                date.setDate(date.getDate() + 1);
+                                dates[i] = date.getDate() + ' ' + monthNames[date.getMonth()] +', '+date.getFullYear().toString();
+                            }
+
+                            else if (day == 6) {
+                                date.setDate(date.getDate() + 2);
+                                dates[i] = date.getDate() + ' ' + monthNames[date.getMonth()] +', '+date.getFullYear().toString();
+                            }
+
+                            else {
+
+                                dates[i] = date.getDate() + ' ' + monthNames[date.getMonth()] +', '+date.getFullYear().toString();
+
+                            }
+                            date.setDate(date.getDate() + 1);
+                        }
+
+                        for (var i = 0; i < data2.response.length; i++) {
+                            gdata.addRows([
+                                [dates[i], parseFloat($.trim(highs[i])), parseFloat($.trim(lows[i]))]
+                            ]);
+
+                        }
+
+                        var options = {
+                            hAxis: {
+                                title: 'Date'
+                            },
+                            vAxis: {
+                                title: pair1 + '/' + pair2 + '\nHighs & Lows'
+                            },
+                            colors: ['#a52714', '#097138']
+                        };
+
+                        var chart = new google.visualization.LineChart(document.getElementById('plot'));
+                        chart.draw(gdata, options);
+                    })
+            }
+
+
+
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="HomePage.html"><img src="./images/logo.jpg" alt="logo" style="width:40px;"></a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
+            aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="HomePage.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="LatestMarket.html#market">Latest Market Price</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="CurrencyConverter.html#converter">Currency Converter</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="CrossCurrency.html#cross-currency">Cross Currency</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="MarketTrends.html#trends">Market Trends</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Homepage.html#about-us">About Us</a>
+                </li>
+            </ul>
+            <a href="Login.html#error"><button type="button" class="btn btn-danger">
+                    Log In/ Sign Up
+                </button></a>
+        </div>
+    </nav>
+
+
+
+    <div id="banner">
+
+        <img class="img-responsive" src="./images/banner.jpg" alt="Gamer's Paradise">
+
+    </div>
+    <br>
+
+
+    <h1 class="display-1 text-center"><b>Forex - CodeHex</b></h1>
+    <h2 class="text-center">Forex Aggregator and Trends</h2><br><br><br><br>
+
+
+    <div id="converter" class="border border-danger"><br>
+
+        <h1 class="text-center text-primary">Currency Converter and Analyzer</h1><br><br>
+
+        <form id="cnv" action="" method="">
+            <div class="form-group">
+                <div class="row mx-auto">
+                    <label class="col-form-label col-md-2" for="pair1">From Currency: </label>
+                    <div class="col-md-2">
+                        <select name="pair1" id="pair1" class="form-control" onchange="" required>
+                            <option value="" selected>Choose</option>
+                            <option value="EUR">EUR</option>
+                        </select>
+                    </div>
+
+                    <label class="col-form-label col-md-2" for="pair2">To Currency: </label>
+                    <div class="col-md-2">
+                        <select name="pair2" id="pair2" class="form-control" onchange="" required>
+                            <option value="" selected>Choose</option>
+                            <option value="USD">USD</option>
+                        </select>
+                    </div>
+
+                    <label class="col-form-label col-md-2" for="amount">Amount: </label>
+                    <div class="col-md-2">
+                        <input type="number" id="amount" class="form-control" placeholder="Amount" required>
+                    </div>
+                </div><br>
+                <div class="offset-6">
+                    <button type="button" id="conv" onclick="getConversion(); getPlot(); buttonBuffer()"
+                        class="btn btn-success" value="button">Convert and Analyze</button>
+                </div>
+            </div>
+        </form>
+
+
+        <div id="result-amount">
+            <!-- populated by getConversion() function -->
+        </div><br><br>
+
+        <div id="graph">
+            <br>
+            <h2 class="text-center text-warning"><u>Overall Weekly Performance of the Pair</u></h2><br><br>
+
+
+            <div id="plot" class="mx-5 mt-auto">
+
+                <!-- populated by getPlot() function -->
+
+
+            </div>
+
+        </div><br><br>
+
+    </div>
+    <br>
+    <br><br><br>
+    <footer class="footer bg-dark" style="text-align: right; margin-top: 20px;">
+        <span>&copy; 2020 Forex - CodeHex, All Rights Reserved.</span>
+    </footer>
+</body>
+
+</html>

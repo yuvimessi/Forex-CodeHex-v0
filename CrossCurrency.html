@@ -1,0 +1,189 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Forex-CodeHex - Cross Currency</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <script src="scripts/jquery-3.4.1.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <link href="css/MyCustomStyle.css" rel="stylesheet" />
+
+
+    <script type="text/javascript">
+
+
+        function getCross() {
+
+            var currency = document.getElementById('currency').value;
+            var access_key = 'DpCMh4J6vOutZOXFheF7pbSnESYzW34FzkwfqxlxJeTSIitm7J';
+
+            var symbol = [];
+            var price = [];
+            var change = [];
+            var chg_per = [];
+            var last_changed = [];
+
+            fetch("https://fcsapi.com/api-v2/forex/cross?symbol=" + currency + "&access_key=" + access_key)
+                .then(response => response.json())
+                .then(data => {
+
+                    //console.log(data)
+
+                    for (i = 0; i < data.response.length; i++) {
+
+                        symbol[i] = data.response[i].symbol;
+                        price[i] = data.response[i].price;
+                        change[i] = data.response[i].change;
+                        chg_per[i] = data.response[i].chg_per;
+                        last_changed[i] = data.response[i].last_changed;
+
+                    }
+
+                    //to check json results on console
+                    /*console.log(symbol)
+                    console.log(price)
+                    console.log(change)
+                    console.log(chg_per)
+                    console.log(last_changed)*/
+
+
+                    var display = document.getElementById("results"); 
+                     output='';
+                     
+                     for (i = 0; i < data.response.length; i++) {
+                         output+=
+
+                        '<tr>'+
+                        '<td>'+ symbol[i] +'</td>'+
+                        '<td>'+ price[i] +'</td>'+
+                        '<td>'+ change[i] +'</td>'+
+                        '<td>'+ chg_per[i] +'</td>'+
+                        '<td>'+ last_changed[i] +'</td>'+
+                        '</tr>'
+                     }
+                     
+                     display.innerHTML=output;
+                })
+
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="HomePage.html"><img src="./images/logo.jpg" alt="logo" style="width:40px;"></a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
+            aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="HomePage.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="LatestMarket.html#market">Latest Market Price</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="CurrencyConverter.html#converter">Currency Converter</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="CrossCurrency.html#cross-currency">Cross Currency</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="MarketTrends.html#trends">Market Trends</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Homepage.html#about-us">About Us</a>
+                </li>
+            </ul>
+            <a href="Login.html#error"><button type="button" class="btn btn-danger">
+                    Log In/ Sign Up
+                </button></a>
+        </div>
+    </nav>
+
+
+
+    <div id="banner">
+
+        <img class="img-responsive" src="./images/banner.jpg" alt="Gamer's Paradise">
+
+    </div>
+    <br>
+
+
+    <h1 class="display-1 text-center"><b>Forex - CodeHex</b></h1>
+    <h2 class="text-center">Forex Aggregator and Trends</h2><br><br><br><br>
+
+
+    <div id="cross-currency" class="border border-danger"><br>
+
+        <h2 class="text-center text-primary">Cross Currency</h2><br><br>
+
+        <form id="crosscurr" action="" method="">
+            <div class="form-group">
+                <div class="row mx-auto">
+                    <label class="col-form-label col-md-2 offset-3" for="currency">Currency Symbol: </label>
+                    <div class="col-md-3">
+                        <select name="currency" id="currency" class="form-control" onchange="" required>
+                            <option value="" selected>Choose Any Currency</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="INR">INR</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <button type="button" onclick="getCross()" class="btn btn-success"
+                            value="button">Cross-IT</button>
+                    </div>
+                </div><br>
+
+            </div>
+        </form>
+
+        <div id="res">
+            <br>
+            <h2 class="text-center text-warning"><u>Results</u></h2><br><br>
+
+            <div id="resultstab" class="mx-1">
+                <table class="table table-bordered text-center">
+                    <thead id="thead">
+                        <tr>
+                            <th>Currency Symbol</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                            <th>Change Percentage</th>
+                            <th>Last Changed Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="results">
+                        <!-- populated by getLatest() function -->
+                    </tbody>
+
+                </table>
+
+
+                
+
+
+            </div>
+
+        </div>
+
+    </div>
+    <br>
+    <br><br><br>
+
+    <footer class="footer bg-dark" style="text-align: right; margin-top: 20px;">
+        <span>&copy; 2020 Forex - CodeHex, All Rights Reserved.</span>
+    </footer>
+</body>
+
+</html>

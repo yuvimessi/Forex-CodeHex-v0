@@ -1,0 +1,149 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Forex-CodeHex - Market Trends</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <script src="scripts/jquery-3.4.1.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <link href="css/MyCustomStyle.css" rel="stylesheet" />
+
+
+    <script type="text/javascript">
+
+
+        function getTrend() {
+
+            var pair1 = document.getElementById('pair1').value;
+            var pair2 = document.getElementById('pair2').value;
+            var access_key = 'DpCMh4J6vOutZOXFheF7pbSnESYzW34FzkwfqxlxJeTSIitm7J';
+
+
+            fetch("https://fcsapi.com/api-v2/forex/pivot_points?symbol=" + pair1 + "/" + pair2 + "&period=1d&access_key=" + access_key)
+                .then(response => response.json())
+                .then(data => {
+
+                    //to check json output on console
+                    //console.log(data)
+                    //console.log(data.response.oa_summary)
+                    //console.log(data.response.pivot_point.classic.pp)
+
+
+                    document.getElementById("results").innerHTML = '<h3 class="text-center">Overall Summary Buy/Sell based on Moving Avg and Technical Indicators: <u>' + data.response.oa_summary + '</u></h3><br>'
+                        +'<h3 class="text-center">Pivot Points: <u>' + data.response.pivot_point.classic.pp + '</u></h3>';
+
+                })
+
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="HomePage.html"><img src="./images/logo.jpg" alt="logo" style="width:40px;"></a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
+            aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="HomePage.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="LatestMarket.html#market">Latest Market Price</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="CurrencyConverter.html#converter">Currency Converter</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="CrossCurrency.html#cross-currency">Cross Currency</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="MarketTrends.html#trends">Market Trends</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Homepage.html#about-us">About Us</a>
+                </li>
+            </ul>
+            <a href="Login.html#error"><button type="button" class="btn btn-danger">
+                    Log In/ Sign Up
+                </button></a>
+        </div>
+    </nav>
+
+
+
+    <div id="banner">
+
+        <img class="img-responsive" src="./images/banner.jpg" alt="Gamer's Paradise">
+
+    </div>
+    <br>
+
+
+    <h1 class="display-1 text-center"><b>Forex - CodeHex</b></h1>
+    <h2 class="text-center">Forex Aggregator and Trends</h2><br><br><br><br>
+
+
+    <div id="trends" class="border border-danger"><br>
+
+        <h2 class="text-center text-primary">Market Trends</h2><br><br>
+
+        <form id="trnds" action="" method="">
+            <div class="form-group">
+                <div class="row mx-auto">
+                    <label class="col-form-label col-md-2 offset-1" for="pair1">From Currency: </label>
+                    <div class="col-md-2">
+                        <select name="pair1" id="pair1" class="form-control" onchange="" required>
+                            <option value="" selected>Choose</option>
+                            <option value="EUR">EUR</option>
+                            <option value="USD">USD</option>
+                            <option value="IND">IND</option>
+                        </select>
+                    </div>
+
+                    <label class="col-form-label col-md-2" for="pair2">To Currency: </label>
+                    <div class="col-md-2">
+                        <select name="pair2" id="pair2" class="form-control" onchange="" required>
+                            <option value="" selected>Choose</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="IND">IND</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button type="button" onclick="getTrend()" class="btn btn-success"
+                            value="button">Search</button>
+                    </div>
+
+                </div><br>
+
+            </div>
+        </form>
+
+        <div id="latest-price">
+            <br>
+            <h2 class="text-center text-warning"><u>Results</u></h2><br><br>
+
+            <div id="results">
+                <!-- populated by getTrend() function -->
+            </div>
+
+        </div>
+
+    </div>
+    <br>
+    <br><br><br>
+
+    <footer class="footer bg-dark" style="text-align: right; margin-top: 20px;">
+        <span>&copy; 2020 Forex - CodeHex, All Rights Reserved.</span>
+    </footer>
+</body>
+
+</html>

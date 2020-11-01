@@ -1,0 +1,144 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Forex-CodeHex - Home</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <script src="scripts/jquery-3.4.1.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <link href="css/MyCustomStyle.css" rel="stylesheet" />
+
+
+    <script type="text/javascript">
+
+
+        function getLatest() {
+
+            var pair1 = document.getElementById('pair1').value;
+            var pair2 = document.getElementById('pair2').value;
+            var pair3 = document.getElementById('pair3').value;
+            var access_key = 'DpCMh4J6vOutZOXFheF7pbSnESYzW34FzkwfqxlxJeTSIitm7J';
+
+            var symbol = [];
+            var price = [];
+            var change = [];
+            var chg_per = [];
+            var last_changed = [];
+
+            fetch("https://fcsapi.com/api-v2/forex/latest?symbol=" + pair1 + "," + pair2 + "," + pair3 + "&access_key=" + access_key)
+                .then(response => response.json())
+                .then(data => {
+
+                    console.log(data)
+
+                    for (i = 0; i < data.response.length; i++) {
+
+                        symbol[i] = data.response[i].symbol;
+                        price[i] = data.response[i].price;
+                        change[i] = data.response[i].change;
+                        chg_per[i] = data.response[i].chg_per;
+                        last_changed[i] = data.response[i].last_changed;
+
+                    }
+
+                    //to check json results on console
+                    /*console.log(symbol)
+                    console.log(price)
+                    console.log(change)
+                    console.log(chg_per)
+                    console.log(last_changed)*/
+
+
+                    var display = document.getElementById("results");
+                    output = '';
+
+                    for (i = 0; i < 3; i++) {
+                        output +=
+                            '<div class="col-sm-12 col-lg-4">' +
+                            '<p><u>' + symbol[i] + '</u></p >' +
+                            '<ul>' +
+                            '<li>Price: ' + price[i] + '</li>' +
+                            '<li>Change: ' + change[i] + '</li>' +
+                            '<li>Change Percentage: ' + chg_per[i] + '</li>' +
+                            '<li>Last Changed Date: ' + last_changed[i] + '</li>' +
+                            '</ul>' +
+                            '</div >'
+                    }
+
+                    display.innerHTML = output;
+
+
+                })
+
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="HomePage.html"><img src="./images/logo.jpg" alt="logo" style="width:40px;"></a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
+            aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="HomePage.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="LatestMarket.html#market">Latest Market Price</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="CurrencyConverter.html#converter">Currency Converter</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="CrossCurrency.html#cross-currency">Cross Currency</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="MarketTrends.html#trends">Market Trends</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Homepage.html#about-us">About Us</a>
+                </li>
+            </ul>
+            <a href="Login.html#error"><button type="button" class="btn btn-danger">
+                    Log In/ Sign Up
+                </button></a>
+        </div>
+    </nav>
+
+
+
+    <div id="banner">
+
+        <img class="img-responsive" src="./images/banner.jpg" alt="Gamer's Paradise">
+
+    </div>
+    <br>
+
+
+    <h1 class="display-1 text-center"><b>Forex - CodeHex</b></h1>
+    <h2 class="text-center">Forex Aggregator and Trends</h2><br><br><br><br>
+
+
+    <div class="error" id="error">
+        <p>This Service is Not Available For Now.</p>
+    </div>
+    <br>
+    <div class="note">
+        <p>Thank You for your Cooperation.<br>Happy Trading !!</p>
+    </div>
+
+
+
+    <footer class="footer bg-dark" style="text-align: right; margin-top: 20px;">
+        <span>&copy; 2020 Forex - CodeHex, All Rights Reserved.</span>
+    </footer>
+</body>
+
+</html>
